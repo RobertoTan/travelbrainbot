@@ -299,15 +299,6 @@ function receivedMessage(event) {
       messageId, appId, metadata);
     return;
   } else if (quickReply) {
-
-    // XXX plug in our bot
-    let handled = bot.handleQuickReply(senderID, message);
-
-    // just to be able to see sample messages from below during development
-    if (handled) {
-      return;
-    }
-
     var quickReplyPayload = quickReply.payload;
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
@@ -436,6 +427,14 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback
   // button for Structured Messages.
   var payload = event.postback.payload;
+
+  // XXX plug in our bot
+  let handled = bot.handlePostback(senderID, payload);
+
+  // just to be able to see sample messages from below during development
+  if (handled) {
+    return;
+  }
 
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
