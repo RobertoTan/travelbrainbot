@@ -18,7 +18,10 @@ const
   https = require('https'),
   request = require('request'),
   FB = require('fb'),
-  Bot = require('./lib/bot');
+  Bot = require('./lib/bot'),
+  moment = require('moment'),
+  Q = require('bluebird'),
+  sabre = Q.promisifyAll(require('./lib/sabre/rest'));
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -112,6 +115,16 @@ const bot = new Bot({
   callSendAPI: callSendAPI,
   fb: FB
 });
+
+app.get('/flight/search', function(req, res) {
+  return sabre.getAsync({
+    service: '/v1/shop/flights',
+    query: req.query
+  }).then(result => {
+    console.log(result)
+    res.status(200).json(result);
+  })
+})
 
 /*
  * Use your own validation token. Check that the token used in the Webhook
