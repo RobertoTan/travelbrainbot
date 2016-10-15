@@ -34,7 +34,7 @@ function getUserName(userId) {
       if (!res || res.error) {
         reject(new Error(res ? res.error : 'Unknown error'));
       } else {
-        resolve(res);
+        resolve(res.first_name);
       }
     });
   });
@@ -237,8 +237,6 @@ function receivedMessage(event) {
   var timeOfMessage = event.timestamp;
   var message = event.message;
 
-  getUserName(senderID).then(x => console.log(x));
-
   console.log("Received message for user %d and page %d at %d with message:",
     senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
@@ -273,6 +271,9 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'hi':
+        sendGreeting(senderID);
+        break;
       case 'image':
         sendImageMessage(senderID);
         break;
@@ -549,6 +550,25 @@ function sendTextMessage(recipientId, messageText) {
 
   callSendAPI(messageData);
 }
+
+function sendGreeting(senderID) {
+  var messageData = {
+    recipient: {
+      id: senderID
+    },
+    message: {
+      text: 'Hi',
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  getUserName(senderID)
+    .then(firstName => {
+      messageData.message.text = `Hey ${firstName}, travelling somewhere?`;
+      callSendAPI(messageData);
+    });
+}
+
 
 /*
  * Send a button message using the Send API.
