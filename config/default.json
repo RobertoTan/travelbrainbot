@@ -1,6 +1,6 @@
 {
-    "appSecret": "",
-    "pageAccessToken": "",
-    "validationToken": "",
-    "serverURL": ""
+    "appSecret": "a5f7c5dfc9a786417a68a5aa30c8c227",
+    "pageAccessToken": "EAAZAYbROrtb8BAMO57n1UDbcgDACK4Isoxy0L08WKjZAYFDj3UIwGkfZCFhfTcypeUN5AcN378A3uwo6lBVKul2IQYAhAXhRZALTh3Q06jtolG4AKLORAWGSbjXCabuiVhdtZBAYH5v3rUPZCvmAugF8BKOCIZB5T20ggkIeSlf4gZDZD",
+    "validationToken": "destinationhacksg",
+    "serverURL": "https://travelbrain.herokuapp.com/"
 }
