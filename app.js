@@ -17,7 +17,8 @@ const
   express = require('express'),
   https = require('https'),
   request = require('request'),
-  FB = require('fb');
+  FB = require('fb'),
+  Bot = require('./lib/bot');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -71,6 +72,42 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
   console.error("Missing config values");
   process.exit(1);
 }
+
+
+/*
+ * Call the Send API. The message data goes in the body. If successful, we'll
+ * get the message id in a response
+ *
+ */
+function callSendAPI(messageData) {
+  request({
+    uri: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: { access_token: PAGE_ACCESS_TOKEN },
+    method: 'POST',
+    json: messageData
+
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var recipientId = body.recipient_id;
+      var messageId = body.message_id;
+
+      if (messageId) {
+        console.log("Successfully sent message with id %s to recipient %s",
+          messageId, recipientId);
+      } else {
+      console.log("Successfully called Send API for recipient %s",
+        recipientId);
+      }
+    } else {
+      console.error("Failed calling Send API", response.statusCode, response.statusMessage, body.error);
+    }
+  });
+}
+
+const bot = new Bot({
+  callSendAPI: callSendAPI,
+  fb: FB
+});
 
 /*
  * Use your own validation token. Check that the token used in the Webhook
@@ -257,6 +294,15 @@ function receivedMessage(event) {
       messageId, appId, metadata);
     return;
   } else if (quickReply) {
+
+    // XXX plug in our bot
+    let handled = bot.handleQuickReply(senderID, message);
+
+    // just to be able to see sample messages from below during development
+    if (handled) {
+      return;
+    }
+
     var quickReplyPayload = quickReply.payload;
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
@@ -266,6 +312,15 @@ function receivedMessage(event) {
   }
 
   if (messageText) {
+
+    // XXX plug in our bot
+    let handled = bot.handleQuickReply(senderID, message);
+
+    // just to be able to see sample messages from below during development
+    if (handled) {
+      return;
+    }
+
 
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
@@ -833,36 +888,6 @@ function sendAccountLinking(recipientId) {
   };
 
   callSendAPI(messageData);
-}
-
-/*
- * Call the Send API. The message data goes in the body. If successful, we'll
- * get the message id in a response
- *
- */
-function callSendAPI(messageData) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: PAGE_ACCESS_TOKEN },
-    method: 'POST',
-    json: messageData
-
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
-
-      if (messageId) {
-        console.log("Successfully sent message with id %s to recipient %s",
-          messageId, recipientId);
-      } else {
-      console.log("Successfully called Send API for recipient %s",
-        recipientId);
-      }
-    } else {
-      console.error("Failed calling Send API", response.statusCode, response.statusMessage, body.error);
-    }
-  });
 }
 
 // Start server
