@@ -314,7 +314,7 @@ function receivedMessage(event) {
   if (messageText) {
 
     // XXX plug in our bot
-    let handled = bot.handleQuickReply(senderID, message);
+    let handled = bot.handleTextMessage(senderID, message);
 
     // just to be able to see sample messages from below during development
     if (handled) {
