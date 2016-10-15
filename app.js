@@ -303,6 +303,14 @@ function receivedMessage(event) {
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
 
+    // XXX plug in our bot
+    let handled = bot.handleQuickReply(senderID, quickReplyPayload);
+
+    // just to be able to see sample messages from below during development
+    if (handled) {
+      return;
+    }
+
     sendTextMessage(senderID, "Quick reply tapped");
     return;
   }
