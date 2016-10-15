@@ -21,13 +21,17 @@ const
   Bot = require('./lib/bot'),
   moment = require('moment'),
   Q = require('bluebird'),
-  sabre = Q.promisifyAll(require('./lib/sabre/rest'));
+  sabre = Q.promisifyAll(require('./lib/sabre/rest')),
+  TBAPI = require('./lib/travelbrainapi');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
+
+
+const tbapi = new TBAPI({baseUrl: 'http://1423edbc.ngrok.io/api/v1'});
 
 
 FB.setAccessToken(config.pageAccessToken);
@@ -113,7 +117,8 @@ function callSendAPI(messageData) {
 
 const bot = new Bot({
   callSendAPI: callSendAPI,
-  fb: FB
+  fb: FB,
+  tbapi: tbapi
 });
 
 app.get('/flight/search', function(req, res) {
@@ -121,10 +126,10 @@ app.get('/flight/search', function(req, res) {
     service: '/v1/shop/flights',
     query: req.query
   }).then(result => {
-    console.log(result)
+    // console.log(result);
     res.status(200).json(result);
-  })
-})
+  });
+});
 
 /*
  * Use your own validation token. Check that the token used in the Webhook
