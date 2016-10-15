@@ -389,6 +389,14 @@ function receivedMessage(event) {
         sendTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
+    // XXX plug in our bot
+    let handled = bot.handleAttachmentMessage(senderID, messageAttachments);
+
+    // just to be able to see sample messages from below during development
+    if (handled) {
+      return;
+    }
+
     sendTextMessage(senderID, "Message with attachment received");
   }
 }
