@@ -80,6 +80,10 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
  *
  */
 function callSendAPI(messageData) {
+  console.log('=========');
+  console.log(messageData);
+  console.log('=========');
+
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
     qs: { access_token: PAGE_ACCESS_TOKEN },
@@ -135,6 +139,7 @@ app.get('/webhook', function(req, res) {
  */
 app.post('/webhook', function (req, res) {
   var data = req.body;
+
 
   // Make sure this is a page subscription
   if (data.object == 'page') {
