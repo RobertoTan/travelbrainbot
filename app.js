@@ -16,13 +16,29 @@ const
   crypto = require('crypto'),
   express = require('express'),
   https = require('https'),
-  request = require('request');
+  request = require('request'),
+  FB = require('fb');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
+
+
+FB.setAccessToken(config.pageAccessToken);
+
+function getUserName(userId) {
+  return new Promise((resolve, reject) => {
+    FB.api(`/${userId}`, 'get', res => {
+      if (!res || res.error) {
+        reject(new Error(res ? res.error : 'Unknown error'));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
 
 /*
  * Be sure to setup your config values before running this code. You can
@@ -221,9 +237,7 @@ function receivedMessage(event) {
   var timeOfMessage = event.timestamp;
   var message = event.message;
 
-  console.log('---------------');
-  console.log(event);
-  console.log('---------------');
+  getUserName(senderID).then(x => console.log(x));
 
   console.log("Received message for user %d and page %d at %d with message:",
     senderID, recipientID, timeOfMessage);
