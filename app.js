@@ -937,7 +937,7 @@ function sendAccountLinking(recipientId) {
 // Webhooks must be available via SSL with a certificate signed by a valid
 // certificate authority.
 app.listen(app.get('port'), function() {
-  bot.startConversation(1462856060406346, {});
+  // bot.startConversation(1462856060406346, {});
   console.log('Node app is running on port', app.get('port'));
 });
 
