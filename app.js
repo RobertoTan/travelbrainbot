@@ -937,7 +937,32 @@ function sendAccountLinking(recipientId) {
 // Webhooks must be available via SSL with a certificate signed by a valid
 // certificate authority.
 app.listen(app.get('port'), function() {
-  // bot.startConversation(1462856060406346, {});
+  bot.startConversation(1462856060406346, {
+    pnr: '123ABC',
+    passengerName: 'Foo Bar',
+    segments: [
+      {
+        flightNumber: 'AA001',
+        aircraftType: 'A320',
+        departureAirport: 'ORD',
+        arrivalAirport: 'LAX',
+        departureTime: '2016-11-02T19:45',
+        arrivalTime: '2016-11-02T21:20'
+      },
+      {
+        flightNumber: 'AA002',
+        aircraftType: 'A320',
+        departureAirport: 'ORD',
+        arrivalAirport: 'LAX',
+        departureTime: '2016-11-04T19:45',
+        arrivalTime: '2016-11-04T21:20'
+      }
+    ],
+    price: {
+      amount: 245,
+      currency: 'USD'
+    }
+});
   console.log('Node app is running on port', app.get('port'));
 });
 
