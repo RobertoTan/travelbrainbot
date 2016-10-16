@@ -131,6 +131,11 @@ app.get('/flight/search', function(req, res) {
   });
 });
 
+app.post('/conversation/:customerId', (req, res) => {
+  tbapi.setCustomerId(req.params.customerId);
+  bot.startConversation(1462856060406346, req.body);
+});
+
 /*
  * Use your own validation token. Check that the token used in the Webhook
  * setup is the same token used here.
@@ -932,6 +937,7 @@ function sendAccountLinking(recipientId) {
 // Webhooks must be available via SSL with a certificate signed by a valid
 // certificate authority.
 app.listen(app.get('port'), function() {
+  bot.startConversation(1462856060406346, {});
   console.log('Node app is running on port', app.get('port'));
 });
 
