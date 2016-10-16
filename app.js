@@ -139,6 +139,18 @@ app.post('/conversation/:customerId', (req, res) => {
   console.log('---------');
 
   bot.startConversation(1462856060406346, req.body);
+  res.status(200).json({});
+});
+
+app.post('/conversation/:customerId/returning', (req, res) => {
+  tbapi.setCustomerId(req.params.customerId);
+
+  console.log('----RETURNING CUSTOMER TRIP-----');
+  console.log(JSON.stringify(req.body, null, 2));
+  console.log('---------');
+
+  bot.startReturningCustomerConversation(1462856060406346, req.body);
+  res.status(200).json({});
 });
 
 /*
